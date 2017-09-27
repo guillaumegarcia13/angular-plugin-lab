@@ -25,6 +25,7 @@ import { HighlyDynamicButtonComponent } from './my-button/highly-dynamic-button.
 //      https://toddmotto.com/lazy-loading-angular-code-splitting-webpack
 //      https://github.com/mgechev/angular-seed/issues/1358#issuecomment-248890159
 //      https://www.reddit.com/r/Angular2/comments/5zji6j/anyone_know_if_its_possible_to_dynamically_load/
+//      https://juristr.com/blog/2017/07/ng2-dynamic-tab-component/
 
 // -----------------------
 //    Plugin injection
