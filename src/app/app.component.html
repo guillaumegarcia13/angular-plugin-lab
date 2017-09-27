@@ -1,20 +1,44 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-  <img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<h2>Plugin Demo</h2>
 
+<blockquote>
+    <article>
+        <h1>{{ title }} {{ initDate | date:'HH:mm:ss:' }}{{ initDate % 1000 }}</h1>
+        <div>
+            <p>bla bla bla</p>
+            <app-my-button></app-my-button>
+        </div>
+    </article>
+</blockquote>
+
+<!-- ~~~~~~~~~~~~~~~~
+       Dynamic HTML
+     ~~~~~~~~~~~~~~~~ -->
+
+<button *ngIf="!showDynamicHTML" (click)="showDynamicHTML = true;">showDynamicHTML</button>
+
+<blockquote *ngIf="showDynamicHTML">
+    <dynamic-html [content]="contentHtml"></dynamic-html>
+</blockquote>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~
+       Dynamic Component
+     ~~~~~~~~~~~~~~~~~~~~~ -->
+
+<button *ngIf="!showDynamicComponent" (click)="showDynamicComponent = true;">showDynamicComponent</button>
+
+<blockquote *ngIf="showDynamicComponent">
+    <div *dynamicComponent="templateComponent; context: {text: 'dynamicText', initDate: initDate};"></div>
+</blockquote>
+
+<!-- ~~~~~~~~~~~~~~~~~~
+       Dynamic Module
+     ~~~~~~~~~~~~~~~~~~ -->
+
+<button *ngIf="!showDynamicModule" (click)="showDynamicModule = true; loadModule();">showDynamicModule</button>
+
+<blockquote *ngIf="showDynamicModule">
+    <!-- Our lazy-loaded component from our lazy-loaded module is going to be injected here -->
+    <div #container></div>
+</blockquote>
+
+<!-- <app-test></app-test> -->
