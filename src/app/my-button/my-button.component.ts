@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
     selector: 'app-my-button',
     template: `
         <button (click)="onClick()">
-            Click Me
+            {{ buttonText }}
         </button>`
 })
 export class MyButtonComponent implements OnInit {
+    @Input() buttonText: string = 'Click Me';
 
     constructor() { }
 

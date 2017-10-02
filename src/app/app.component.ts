@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, Injector } from '@angular/core';
 import { ViewChild, ViewContainerRef, ModuleWithComponentFactories } from '@angular/core';
 import { NgModuleFactory, NgModuleFactoryLoader, NgModule, NgModuleRef } from '@angular/core';
@@ -13,6 +13,8 @@ import { NgModuleFactory, NgModuleFactoryLoader, NgModule, NgModuleRef } from '@
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+    @Input() value: string = 'value';
+
     initDate;
 
     showDynamicHTML: boolean;
@@ -84,6 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
         // }
 
         loadModule() {
+            const t0 = performance.now();
             this.loader.load('../assets/plugins/test.module#TestModule')
                 .then((moduleFactory: NgModuleFactory<any>) => {
                     console.log(moduleFactory);
@@ -92,6 +95,10 @@ export class AppComponent implements OnInit, OnDestroy {
                     const moduleRef = moduleFactory.create(this.injector);
 
                     const componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(entryComponent);
+
+                    const t1 = performance.now();
+                    console.log('Call to doSomething took ' + Math.round(t1 - t0) + ' milliseconds.');
+
                     this.container.createComponent(componentFactory);
                 });
         }
@@ -106,38 +113,67 @@ export class AppComponent implements OnInit, OnDestroy {
             //         });
             // });
 
-            const template  = `
-                <article>
-                    <h1>Dynamic Component Module</h1>
-                    <div>
-                        <p>{{ text }} {{ initDate | date:'HH:mm:ss:' }}{{ initDate % 1000 }}</p>
-                        <div *ngIf="false">
-                            Condition *ngIf false
-                        </div>
-                        <div *ngIf="true">
-                            Condition *ngIf true
-                        </div>
-                    </div>
-                    <span>generated on the fly by: <strong>{{ name }}</strong></span>
-                </article>
+            const t0 = performance.now();
+
+            const templateChild = `
+                <p>{{ text }} {{ initDate | date:'HH:mm:ss:' }}{{ initDate % 1000 }}</p>
             `;
-            const tmpCmp    = Component({template: template})(class {});
+            const tmpChildCmp = Component(
+                {
+                    selector: 'external-child',
+                    template: templateChild,
+                    inputs  : ['text']
+                }
+            )(class TmpParentCmp implements OnInit {
+                text: string = 'Sauron';
+                initDate = new Date();
+                constructor() { console.info('Constructor has been called'); }
+                ngOnInit() { console.info('OnInit has been called'); }
+            });
+
+            const tmpParentCmp = Component(
+                {
+                    selector: 'external-parent',
+                    template: `
+                        <article>
+                            <h1>Dynamic Component Module</h1>
+                            <div>
+                                <external-child text="Bilbon"></external-child>
+                                <external-child text="Frodon"></external-child>
+                                <external-child text="Sam"></external-child>
+                                <external-child text="Pippin"></external-child>
+                                <div *ngIf="false">
+                                    Condition *ngIf false
+                                </div>
+                                <div *ngIf="true">
+                                    Condition *ngIf true
+                                </div>
+                            </div>
+                            <span>generated on the fly by: <strong>{{ name }}</strong></span>
+                        </article>
+                    `,
+                    styles: ['article h1 { color: blue; }']
+                }
+            )(class TmpParentCmp {});
             const tmpModule = NgModule(
                 {
-                    declarations: [tmpCmp],
+                    declarations: [tmpParentCmp, tmpChildCmp],
                     imports     : [BrowserModule]
                 }
-            )(class {});
+            )(class TmpModule {});
+
+            console.log(tmpModule);
 
             this.compiler.compileModuleAndAllComponentsAsync(tmpModule)
                 .then((factories) => {
-                    const fac = factories.componentFactories[0];
-                    const cmpRef = fac.create(this.injector, [], null, this.moduleref);
-                    Object.assign(cmpRef.instance, {
-                        name    : 'Team Fcom',
-                        initDate: new Date()
-                    });
-                    this.compiledContainer.insert(cmpRef.hostView, 0);
+                    console.log(factories);
+                    const cmpFactoryParent = factories.componentFactories.find((entry) => entry.componentType.name === 'TmpParentCmp');
+                    const cmpFactoryChild  = factories.componentFactories.find((entry) => entry.componentType.name === 'TmpChildCmp');
+                    const cmpParentRef = cmpFactoryParent.create(this.injector, [], null, this.moduleref);
+
+                    const t1 = performance.now();
+                    console.log('Module dynamic load & compile took ' + Math.round(t1 - t0) + ' milliseconds.');
+                    this.compiledContainer.insert(cmpParentRef.hostView, 0);
                 });
         }
 
