@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, NgModuleFactory, Injector } from '@angular/core';
-import { ViewChild, ViewContainerRef } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, Injector } from '@angular/core';
+import { ViewChild, ViewContainerRef, ModuleWithComponentFactories } from '@angular/core';
+import { NgModuleFactory, NgModuleFactoryLoader, NgModule, NgModuleRef } from '@angular/core';
+// import * as System from 'systemjs';
+// import 'systemjs.config.js';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
     initDate;
 
     showDynamicHTML: boolean;
@@ -52,14 +57,16 @@ export class AppComponent implements OnInit {
         </article>
     `;
 
-    @ViewChild('container', { read: ViewContainerRef }) container: ViewContainerRef;
+    @ViewChild('container',         { read: ViewContainerRef }) container: ViewContainerRef;
+    @ViewChild('compiledContainer', { read: ViewContainerRef }) compiledContainer: ViewContainerRef;
 
     constructor(
         private viewref: ViewContainerRef,
         private resolver: ComponentFactoryResolver,
-        private loader: SystemJsNgModuleLoader,
+        private loader: NgModuleFactoryLoader, // SystemJsNgModuleLoader,
         private compiler: Compiler,
-        private injector: Injector)  {}
+        private injector: Injector,
+        private moduleref: NgModuleRef<any> )  {}
 
         ngOnInit() {
             this.initDate = new Date();
@@ -77,16 +84,67 @@ export class AppComponent implements OnInit {
         // }
 
         loadModule() {
-            // this.loader.load('./src/assets/plugins/dummy.module#DummyModule')
-            this.loader.load('../assets/test.module#TestModule')
+            this.loader.load('../assets/plugins/test.module#TestModule')
                 .then((moduleFactory: NgModuleFactory<any>) => {
                     console.log(moduleFactory);
 
                     const entryComponent = (<any> moduleFactory.moduleType).entry;
                     const moduleRef = moduleFactory.create(this.injector);
 
-                    const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(entryComponent);
-                    this.container.createComponent(compFactory);
+                    const componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(entryComponent);
+                    this.container.createComponent(componentFactory);
                 });
+        }
+
+        loadModuleAndCompile() {
+            // System.import('../assets/plugins/test.module#TestModule').then((module) => {
+            //     this.compiler.compileModuleAndAllComponentsAsync(module.TModule)
+            //         .then((compiled) => {
+            //             const m = compiled.ngModuleFactory.create(this.injector);
+            //             const factory = compiled.componentFactories[0];
+            //             const cmp = factory.create(this.injector, [], null, m);
+            //         });
+            // });
+
+            const template  = `
+                <article>
+                    <h1>Dynamic Component Module</h1>
+                    <div>
+                        <p>{{ text }} {{ initDate | date:'HH:mm:ss:' }}{{ initDate % 1000 }}</p>
+                        <div *ngIf="false">
+                            Condition *ngIf false
+                        </div>
+                        <div *ngIf="true">
+                            Condition *ngIf true
+                        </div>
+                    </div>
+                    <span>generated on the fly by: <strong>{{ name }}</strong></span>
+                </article>
+            `;
+            const tmpCmp    = Component({template: template})(class {});
+            const tmpModule = NgModule(
+                {
+                    declarations: [tmpCmp],
+                    imports     : [BrowserModule]
+                }
+            )(class {});
+
+            this.compiler.compileModuleAndAllComponentsAsync(tmpModule)
+                .then((factories) => {
+                    const fac = factories.componentFactories[0];
+                    const cmpRef = fac.create(this.injector, [], null, this.moduleref);
+                    Object.assign(cmpRef.instance, {
+                        name    : 'Team Fcom',
+                        initDate: new Date()
+                    });
+                    this.compiledContainer.insert(cmpRef.hostView, 0);
+                });
+        }
+
+        // Don't forget to clean your mess up!
+        ngOnDestroy() {
+            for (let i = 0 ; i < this.compiledContainer.length ; i++ ) {
+                this.compiledContainer.get(i).destroy();
+            }
         }
     }

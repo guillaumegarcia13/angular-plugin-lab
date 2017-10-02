@@ -36,9 +36,20 @@
 
 <button *ngIf="!showDynamicModule" (click)="showDynamicModule = true; loadModule();">showDynamicModule</button>
 
-<blockquote *ngIf="showDynamicModule">
+<blockquote>
     <!-- Our lazy-loaded component from our lazy-loaded module is going to be injected here -->
     <div #container></div>
 </blockquote>
 
-<!-- <app-test></app-test> -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       Dynamic Compiled Module
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<button *ngIf="!showDynamicCompiledModule" (click)="showDynamicCompiledModule = true; loadModuleAndCompile();">showDynamicCompiledModule</button>
+
+<!-- <blockquote *ngIf="showDynamicCompiledModule">  /!\ *ngIf messes averything up!  -->
+<blockquote>
+        <!-- Our lazy-loaded compiled component from our lazy-loaded compiled module is going to be injected here -->
+    <div #compiledContainer></div>
+</blockquote>

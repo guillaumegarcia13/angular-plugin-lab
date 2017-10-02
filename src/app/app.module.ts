@@ -37,7 +37,8 @@ import { HighlyDynamicButtonComponent } from './my-button/highly-dynamic-button.
 // See: https://stackoverflow.com/questions/40293240/how-to-manually-lazy-load-a-module
 //      https://github.com/angular/angular/issues/11738
 //      https://github.com/alexzuza/angular-cli-lazy
-import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, NgModuleFactory } from '@angular/core';
+//      https://blog.angularindepth.com/here-is-what-you-need-to-know-about-dynamic-components-in-angular-ac1e96167f9e
+import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, NgModuleFactory, NgModuleFactoryLoader } from '@angular/core';
 import { provideRoutes } from '@angular/router';
 
 // Some decorator (UNUSED)
@@ -49,7 +50,7 @@ import { provideRoutes } from '@angular/router';
         AppComponent,
         MyButtonComponent,
         DynamicButtonComponent,
-        // HighlyDynamicButtonComponent   // necessary for AoT compilation 
+        // HighlyDynamicButtonComponent   // necessary for AoT compilation
     ],
     imports: [
         BrowserModule,
@@ -77,9 +78,12 @@ import { provideRoutes } from '@angular/router';
         })
     ],
     providers: [
-        SystemJsNgModuleLoader,
+        {  // conceptually better than simply: SystemJsNgModuleLoader
+            provide: NgModuleFactoryLoader,
+            useClass: SystemJsNgModuleLoader
+        },
         provideRoutes([
-           { loadChildren: '../assets/test.module#TestModule' }
+           { loadChildren: '../assets/plugins/test.module#TestModule' }
         ])
     ],
     bootstrap: [AppComponent]

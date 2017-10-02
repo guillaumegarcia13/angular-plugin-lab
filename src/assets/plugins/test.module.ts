@@ -5,7 +5,7 @@ import {CommonModule} from '@angular/common';
     selector: 'app-test',
     template: `
         <article>
-            <h1>Dynamic Module</h1>
+            <h1>Dynamic Module 🔥🔥🔥</h1>
             <div>{{ remark }} at {{ initDate | date:'HH:mm:ss' }}:{{ initDate % 1000 }}</div>
             <button (click)="onClick()" #innerContent>
                 Click Me, I'm TREMENDOUSLY dynamic
