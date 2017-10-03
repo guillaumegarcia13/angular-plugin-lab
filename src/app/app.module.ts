@@ -83,7 +83,7 @@ import { provideRoutes } from '@angular/router';
             useClass: SystemJsNgModuleLoader
         },
         provideRoutes([
-           { loadChildren: '../assets/plugins/test.module#TestModule' }
+           { loadChildren: '../assets/plugins/plugin.module#PluginModule' }
         ])
     ],
     bootstrap: [AppComponent]

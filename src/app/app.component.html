@@ -42,13 +42,13 @@
 </blockquote>
 
 
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       Dynamic Compiled Module
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~
+       Async Compiled Module
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-<button *ngIf="!showDynamicCompiledModule" (click)="showDynamicCompiledModule = true; loadModuleAndCompile();">showDynamicCompiledModule</button>
+<button *ngIf="!showAsyncCompiledModule" (click)="showAsyncCompiledModule = true; loadModuleAndCompile();">showAsyncwCompiledModule</button>
 
-<!-- <blockquote *ngIf="showDynamicCompiledModule">  /!\ *ngIf messes averything up!  -->
+<!-- <blockquote *ngIf="showAsyncCompiledModule">  /!\ *ngIf messes averything up!  -->
 <blockquote>
         <!-- Our lazy-loaded compiled component from our lazy-loaded compiled module is going to be injected here -->
     <div #compiledContainer></div>

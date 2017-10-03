@@ -1,8 +1,8 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 
 @Component({
-    selector: 'app-test',
+    selector: 'app-plugin-cmp',
     template: `
         <article>
             <h1>Dynamic Module 🔥🔥🔥</h1>
@@ -19,25 +19,15 @@ import {CommonModule} from '@angular/common';
         </article>
     `
 })
-export class TestComponent implements OnInit {
+export class PluginComponent implements OnInit {
     remark: string = 'This is AWESOME!!';
-    initDate;
+    initDate: Date;
 
     ngOnInit() {
         this.initDate = new Date();
     }
 
     onClick() {
-        console.log('[TestComponent] Button clicked: ' + new Date());
+        console.log('[PluginComponent] Button clicked: ' + new Date());
     }
-}
-
-@NgModule({
-    imports: [CommonModule],
-    exports: [TestComponent],
-    declarations: [TestComponent],
-    entryComponents: [TestComponent]
-})
-export class TestModule {
-    static entry = TestComponent;
 }

@@ -1,0 +1,32 @@
+{
+    "README": "Simply run node_modules/.bin/ngc -p 'src/assets/plugins/tsconfig.dynamic.json' from the command line",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": ["es2015", "dom"],
+        "noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "typeRoots": [
+            "./node_modules/@types/"
+        ]
+    },
+    
+    "files": [
+        "./plugin.module.ts",
+        "./plugin.component.ts"
+    ],
+    
+    "angularCompilerOptions": {
+        "genDir": "aot",
+        "skipMetadataEmit" : true
+    },
+    
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ]
+}

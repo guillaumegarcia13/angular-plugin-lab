@@ -87,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         loadModule() {
             const t0 = performance.now();
-            this.loader.load('../assets/plugins/test.module#TestModule')
+            this.loader.load('../assets/plugins/plugin.module#PluginModule')
                 .then((moduleFactory: NgModuleFactory<any>) => {
                     console.log(moduleFactory);
 
@@ -101,6 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
                     this.container.createComponent(componentFactory);
                 });
+            // NgModuleFactory()
         }
 
         loadModuleAndCompile() {
@@ -136,7 +137,7 @@ export class AppComponent implements OnInit, OnDestroy {
                     selector: 'external-parent',
                     template: `
                         <article>
-                            <h1>Dynamic Component Module</h1>
+                            <h1>Async Compiled Module & Component</h1>
                             <div>
                                 <external-child text="Bilbon"></external-child>
                                 <external-child text="Frodon"></external-child>
@@ -172,7 +173,7 @@ export class AppComponent implements OnInit, OnDestroy {
                     const cmpParentRef = cmpFactoryParent.create(this.injector, [], null, this.moduleref);
 
                     const t1 = performance.now();
-                    console.log('Module dynamic load & compile took ' + Math.round(t1 - t0) + ' milliseconds.');
+                    console.log('Module async load & compile took ' + Math.round(t1 - t0) + ' milliseconds.');
                     this.compiledContainer.insert(cmpParentRef.hostView, 0);
                 });
         }
