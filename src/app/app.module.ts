@@ -25,7 +25,7 @@ import { HighlyDynamicButtonComponent } from './my-button/highly-dynamic-button.
 //      https://toddmotto.com/lazy-loading-angular-code-splitting-webpack
 //      https://github.com/mgechev/angular-seed/issues/1358#issuecomment-248890159
 //      https://www.reddit.com/r/Angular2/comments/5zji6j/anyone_know_if_its_possible_to_dynamically_load/
-//      https://juristr.com/blog/2017/07/ng2-dynamic-tab-component/
+//      ⭐ https://juristr.com/blog/2017/07/ng2-dynamic-tab-component/
 
 // -----------------------
 //    Plugin injection
@@ -37,7 +37,8 @@ import { HighlyDynamicButtonComponent } from './my-button/highly-dynamic-button.
 // See: https://stackoverflow.com/questions/40293240/how-to-manually-lazy-load-a-module
 //      https://github.com/angular/angular/issues/11738
 //      https://github.com/alexzuza/angular-cli-lazy
-//      https://blog.angularindepth.com/here-is-what-you-need-to-know-about-dynamic-components-in-angular-ac1e96167f9e
+//      ⭐ https://blog.angularindepth.com/here-is-what-you-need-to-know-about-dynamic-components-in-angular-ac1e96167f9e
+//      ⭐ https://stackoverflow.com/questions/38888008/how-can-i-use-create-dynamic-template-to-compile-dynamic-component-with-angular
 import { Compiler, SystemJsNgModuleLoader, ComponentFactoryResolver, NgModuleFactory, NgModuleFactoryLoader } from '@angular/core';
 import { provideRoutes } from '@angular/router';
 
